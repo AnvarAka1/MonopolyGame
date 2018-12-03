@@ -7,10 +7,22 @@
 
 void GUI();
 void diceUI();
+void makeOwner(struct Player p, struct Board b);
+void calculateRent(struct Board b, int position);
 int Randomize(struct Dice, struct Board, struct Player);
 void goToJail(struct Board b, struct Player p);
 void movePlayer(struct Player p, int targetPosition);
 void moveAnimation(struct Player p, int targetPosition);
+void playerOnCell(struct Board b, struct Player p);
+void railroad(struct Board b, struct Player p);
+void subtractMoney(struct Player p, struct BoardCell cell);
+void electric(struct Board b, struct Player p);
+void waterWorks(struct Board b, struct Player p);
+void giveMoney(struct Player p, int money);
+int cardRandom(struct Card c);
+void makeCardAction(int comOrChance, int randNumber, struct Card c);
+void communityChest(struct Player p, struct Card c);
+void chance(struct Player p, struct Card c);
 void sendDice(struct Dice d);
 void buttonDisable();
 void cardsInitialize(struct Card c);
@@ -27,16 +39,16 @@ int main()
   struct Player p;
   struct Dice d;
   d.counter = 0;
-  GUI();
+  GUI(p, b);
   while (Randomize(d, b, p) != 0)
   {
     diceUI();
   }
 }
 
-void GUI(struct Player p , struct Board b)
+void GUI(struct Player p, struct Board b)
 {
-  
+
   // whole GUI
 }
 void diceUI()
@@ -168,7 +180,7 @@ void playerOnCell(struct Board b, struct Player p)
 }
 
 //returns an array with cell numbers with railroads which are owned by the player
-int *railroad(struct Board b, struct Player p)
+void railroad(struct Board b, struct Player p)
 {
   int railroadNumber[4];
   for (int i = 0; i < b.sizeOfBoard; i++)
@@ -185,7 +197,8 @@ int *railroad(struct Board b, struct Player p)
       //disable cells
     }
   }
-  return railroadNumber;
+  //return 1;
+  // return railroadNumber;
 }
 
 void subtractMoney(struct Player p, struct BoardCell cell)
@@ -201,10 +214,10 @@ void chance(struct Player p, struct Card c)
 {
   makeCardAction(1, cardRandom(c), c);
 }
-void railroad(struct Board b, struct Player p)
-{
-  findAllRailroads(b);
-}
+// void railroad(struct Board b, struct Player p)
+// {
+//   findAllRailroads(b);
+// }
 void electric(struct Board b, struct Player p)
 {
   // ???
