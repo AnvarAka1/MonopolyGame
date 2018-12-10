@@ -10,6 +10,7 @@ struct Player
   bool needMoney;
   bool inJail;
   bool hasJailFreeCard;
+  int jailCounter;
 };
 struct Dice
 {
