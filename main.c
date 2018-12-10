@@ -419,93 +419,19 @@ void makeCardAction(int comOrChance, int randNumber, struct Player p, struct Boa
 			}
 		}
 		break;
-    /*case 3: //Advance token to nearest Utility. 
-			//If unowned, you may buy it from the Bank. 
-			//If owned, throw dice and pay owner a total 10 times the amount thrown.
-      		//Electric Company, Reading Railroad, B. & O. Railroad, Pennsylvania Railroad, Short Line, Water Works
-		bool out_of_bound =true;
-		for(int i = p.position; i < b.sizeOfBoard; i++){
-			if(b.cells[i].title == "Electric Company" || b.cells[i].title == "Water Works" || b.cells[i].title == "Reading Railroads" || b.cells[i].title == "B. & O. Railroad" || b.cells[i].title == "Pennsylvania Railroad" || b.cells[i].title == "Short Line")
-			{
-				movePlayer(p,i);
-				out_of_bound=false;
-				if(b.cells[i].owner.id == NULL){
-					int choice;
-					printf("Will you buy or not? Press 1 to buy, or 2 to reject");
-					if(choice==1){
-						subtractMoney(p, b.cells[i].price);
-						b.cells[i].owner = p;
-					}
-					else
-						continue;
-
-				}else{
-					// we have access to global Dice d variable
-					Randomize(d, b, p);
-					// we can access num1, num2 of global Dice d
-					int total = (d.num1 + d.num2) * 10;
-					subtractMoney(p, total);
-					giveMoney(b.cells[i].owner, total);
-				}
-			}
-		}
-		if(out_of_bound==true){
-			for(int i = 0; i < b.sizeOfBoard; i++){
-				if(b.cells[i].title == "Electric Company" || b.cells[i].title == "Water Works" 
-				|| b.cells[i].title == "Reading Railroads" || b.cells[i].title == "B. & O. Railroad" 
-				|| b.cells[i].title == "Pennsylvania Railroad" || b.cells[i].title == "Short Line")
-						movePlayer(p,i);
-			}
-		}   
-	  	break;*/
-    case 3: //Advance token to the nearest Railroad
-	 		//and pay owner twice the rental to which he/she {he} 
-	 		//is otherwise entitled. If Railroad is unowned, you may buy it from the Bank.
-	
-		bool out_of_bound =true;
-		for(int i = p.position; i < b.sizeOfBoard; i++){
-			if(b.cells[i].title == "Reading Railroads" || b.cells[i].title == "B. & O. Railroad" || b.cells[i].title == "Pennsylvania Railroad" || b.cells[i].title == "Short Line")
-			{
-				movePlayer(p,i);
-				out_of_bound=false;
-				if(b.cells[i].owner.id == NULL){
-					int choice;
-					printf("Will you buy or not? Press 1 to buy, or 2 to reject");
-					if(choice==1){
-						subtractMoney(p, b.cells[i].price);
-						b.cells[i].owner = p;
-					}
-					else
-						continue;
-
-				}
-				else{
-					subtractMoney(p, 2*(b.cells[i].price));
-					giveMoney(b.cells[i].owner, 2*(b.cells[i].price));
-				}
-
-			}
-		}
-		if(out_of_bound==true){
-			for(int i = 0; i < b.sizeOfBoard; i++){
-				if(b.cells[i].title == "Reading Railroads" || b.cells[i].title == "B. & O. Railroad" || b.cells[i].title == "Pennsylvania Railroad" || b.cells[i].title == "Short Line")
-						movePlayer(p, i);
-			}
-		 }  
-     	break;
-    case 4: //Bank pays you dividend of $50.
+    case 3: //Bank pays you dividend of $50.
       	giveMoney(p,50);
      	break;
-    case 5: //Get out of Jail Free. This card may be kept until needed.
+    case 4: //Get out of Jail Free. This card may be kept until needed.
 		
       	break;
-    case 6: //Go Back Three {3} Spaces.
+    case 5: //Go Back Three {3} Spaces.
 		movePlayer(p, -3);
 		break;
-    case 7: //Go to Jail. Go directly to Jail. Do not pass GO, do not collect $200.
+    case 6: //Go to Jail. Go directly to Jail. Do not pass GO, do not collect $200.
 		movePlayer(p, 11);
       	break;
-    case 8: //"Make general repairs on all your property: For each house pay $25, For each hotel {pay} $100.
+    case 7: //"Make general repairs on all your property: For each house pay $25, For each hotel {pay} $100.
 		int sum = 0;
 		for(int i = 0; i < b.sizeOfBoard; i++){
 			if(b.cells[i].owner.id == p.id){
@@ -517,10 +443,10 @@ void makeCardAction(int comOrChance, int randNumber, struct Player p, struct Boa
 		}
 		subtractMoney(p, sum);
       	break;
-    case 9: //Pay poor tax of $15
+    case 8: //Pay poor tax of $15
 		subtractMoney(p, 15);
       	break;
-    case 10: //Take a trip to Reading Railroad.If you pass Go, collect $200.
+    case 9: //Take a trip to Reading Railroad.If you pass Go, collect $200.
 		bool out_of_bound =true;
 		bool pass_start = false;
 		for(int i = p.position; i < b.sizeOfBoard; i++){
@@ -546,7 +472,7 @@ void makeCardAction(int comOrChance, int randNumber, struct Player p, struct Boa
 			}
 		}
 	  	break;
-    case 11: //Take a walk on the Boardwalk. Advance token to Boardwalk. {Board Walk in both sentences}
+    case 10: //Take a walk on the Boardwalk. Advance token to Boardwalk. {Board Walk in both sentences}
 		bool out_of_bound =true;
 		for(int i = p.position; i < b.sizeOfBoard; i++){
 			if(b.cells[i].title == "Boardwalk")
@@ -562,14 +488,11 @@ void makeCardAction(int comOrChance, int randNumber, struct Player p, struct Boa
 			}
 		}  
       	break;
-    /*case 13: //You have been elected Chairman of the Board. Pay each player $50.
-		subtractMoney(p, 50);
-		//pay???
-      	break;*/
-    case 12: //Your building {and} loan matures. Receive {Collect} $150.
+    
+    case 11: //Your building {and} loan matures. Receive {Collect} $150.
 		giveMoney(p, 150);
       	break;
-    case 13: //You have won a crossword competition. Collect $100
+    case 12: //You have won a crossword competition. Collect $100
 		giveMoney(p, 100);
 	  	break;
     default:
@@ -595,14 +518,39 @@ void buttonDisable()
 //Initialize Cards
 void cardsInitialize(struct Card c)
 {
-	char *comChest[] = {"first comChest", "second comChest", "third comChest",
-											"fourth comChest", "first comChest", "second comChest", "third comChest", "fourth comChest",
-											"first comChest", "second comChest", "third comChest", "fourth comChest", "first comChest",
-											"second comChest", "third comChest", "fourth comChest", "first comChest", "second comChest",
-											"third comChest", "fourth comChest"};
-	char *chance[] = {"first", "second", "third", "fourth", "first",
-										"second", "third", "fourth", "first", "second", "third", "fourth",
-										"first", "second", "third", "fourth", "first", "second", "third", "fourth"};
+char *comChest[] = 
+					{ "Advance to 'Go'. Collect $200", 
+                      "Doctor's fees. Pay $50. ", 
+                      "From sale of stock you get $50. ",
+                      "Get Out of Jail Free.", 
+                      "Go to Jail. Go directly to jail. Do not pass Go, Do not collect $200.", 
+                      "Grand Opera Night. Collect $50 from every player for opening night seats. ", 
+                      "Holiday Fund matures. Collect $100.", 
+                      "Income tax refund. Collect $20.",
+                      "It is your birthday. Collect $10 from every player. ", 
+                      "Life insurance matures – Collect $100 ", 
+                      "Hospital Fees. Pay $50.", 
+                      "School fees. Pay $50. ", 
+                      "Receive $25 consultancy fee.",
+                      "You are assessed for street repairs: Pay $40 per house and $115 per hotel you own. ", 
+                      "You have won second prize in a beauty contest. Collect $10. ", 
+                      "You inherit $100.",
+                    };
+  char *chance[] = 
+  					{  	"Advance to 'Go'. Collect $200", 
+						"Advance to St. Charles Place. If you pass Go, collect $200.", 
+						"Advance to Illinois Ave. If you pass Go, collect $200."
+						"Bank pays you dividend of $50.",
+						"Get out of Jail Free. This card may be kept until needed.", 
+						"Go Back Three {3} Spaces.", 
+						"Go to Jail. Go directly to Jail. Do not pass GO, do not collect $200.", 
+						"Make general repairs on all your property: For each house pay $25, For each hotel {pay} $100.", 
+						"Pay poor tax of $15 ", 
+						"Take a trip to Reading Railroad. {Take a ride on the Reading. Advance token and} If you pass Go, collect $200.", 
+						"Take a walk on the Boardwalk. Advance token to Boardwalk. {Board Walk in both sentences} ",
+						"Your building {and} loan matures. Receive {Collect} $150. ", 
+						"You have won a crossword competition. Collect $100.",
+                    }; 
 	for (int i = 0; i < 20; i++)
 	{
 		strcpy(c.comChest[i], comChest[i]);
@@ -994,6 +942,7 @@ char *putBoardCellIntoBuffer(char *buffer, struct BoardCell c)
 	// Maybe just to make changes in owner, we need to pass a string with number of cell
 	//and the changes in struct Player
 	//same with improvements
+	
 	sprintf(buffer, "%s/%d/%d/%d/%d/%s/%d/%d/%d/%d/%d/%d/%d/%d/%d/%d/%d/%d",
 					c.title, c.initialPrice, c.color, c.type, c.owner.id, c.owner.name, c.owner.color,
 					c.owner.money, c.owner.position, c.owner.noMoney, c.owner.needMoney, c.owner.inJail,
