@@ -147,9 +147,13 @@ int Randomize(struct Dice d, struct Board b, struct Player p)
 	/* Intializes random number generator */
 	d.num1 = 1 + rand() % 6; //5
 	d.num2 = 1 + rand() % 6; //6
-
 	if (d.num1 == d.num2)
 	{
+		if (p.inJail)
+		{
+			p.inJail = false;
+			p.jailCounter = 0;
+		}
 		d.counter++;
 		if (d.counter == 3)
 		{
@@ -162,12 +166,25 @@ int Randomize(struct Dice d, struct Board b, struct Player p)
 	{
 		d.counter = 0;
 	}
+
+	// if the player is in jail, then he just skips his turn
+	// and jailCounter++
+	if (p.inJail)
+	{
+		p.jailCounter++;
+	}
+	else
+	{
+		move = p.position + d.num1 + d.num2;
+		movePlayer(p, move);
+	}
 	sendDice(d);
 	return d.counter;
 }
 
 void goToJail(struct Board b, struct Player p)
 {
+	p.inJail = true;
 	int n = 40;
 	int jailPosition;
 	for (int i = 0; i < n; i++)
@@ -177,14 +194,16 @@ void goToJail(struct Board b, struct Player p)
 			jailPosition = i;
 		}
 	}
+
 	movePlayer(p, jailPosition);
 	//or for animation this can be done like
-	moveAnimation(p, jailPosition);
+	//moveAnimation(p, jailPosition);
 }
 
 void movePlayer(struct Player p, int targetPosition)
 {
-	p.position = targetPosition;
+
+	p.position = targetPosition % 40;
 }
 void moveAnimation(struct Player p, int targetPosition)
 {
