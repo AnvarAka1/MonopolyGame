@@ -425,6 +425,7 @@ void makeCardAction(int comOrChance, int randNumber, struct Player p, struct Boa
     case 4: //Get out of Jail Free. This card may be kept until needed.
 		
       	break;
+		  
     case 5: //Go Back Three {3} Spaces.
 		movePlayer(p, -3);
 		break;
