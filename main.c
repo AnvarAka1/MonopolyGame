@@ -90,7 +90,6 @@ int main()
 	return 0;
 }
 
-
 #pragma region Game
 
 // ------------------------ GAME --------------------
@@ -144,6 +143,7 @@ void calculateRent(struct Board b, int position)
 // Dice Generator function
 int Randomize(struct Dice d, struct Board b, struct Player p)
 {
+	int move;
 	buttonDisable();
 	/* Intializes random number generator */
 	d.num1 = 1 + rand() % 6; //5
@@ -335,189 +335,201 @@ int cardRandom(struct Card c)
 //Mokhlar must write as much as she can
 void makeCardAction(int comOrChance, int randNumber, struct Player p, struct Board b)
 {
-	  if (!comOrChance)
-  { 
-    //Community Chest
-    switch (randNumber)
-    {
-    case 0:
-		movePlayer(p, 0); //Advance to 'Go'. 
-		giveMoney(p, 200); //Collect $200
-      	break;
-    case 1:
-      	subtractMoney(p, 50); //Pay $50.
-      	break;
-    case 2:
-      	giveMoney(p, 50); 
-      	break;
-    case 3:
-      	p.hasJailFreeCard = true;
-      	break;
-    case 4:
-      	goToJail(b, p);
-      	break;
-    case 5:
-      	giveMoney(p, 50);  // collect from each player 
-      	break;
-    case 6:
-     	giveMoney(p, 100);
-      	break;
-    case 7:
-      	giveMoney(p, 20);
-      	break;
-    case 8:
-      	giveMoney(p, 10);
-      	break;
-    case 9:
-      	giveMoney(p, 100);
-      	break;
-    case 10:
-      	subtractMoney(p, 50);
-      	break;
-    case 11:
-      	subtractMoney(p, 50);
-      	break;
-    case 12:
-      	giveMoney(p, 100);
-      	break;
-    case 13:
-		int sum = 0;
-		for(int i = 0; i < b.sizeOfBoard; i++)
+	if (!comOrChance)
+	{
+		//Community Chest
+		switch (randNumber)
 		{
-			if((b.cells[i].owner.id == p.id) && (b.cells[i].type == 1)){
-			sum += b.cells[i].impr.numOfHouses * 40 + 1* 115; //Pay $40 per house and $115 per hotel you own
-			}
-		}
-		subtractMoney(p, sum);
-      	break;
-    case 14:
-      	giveMoney(p, 10);
-      	break;
-    case 15:
-      	giveMoney(p, 100);
-      	break;
-    default:
-      	printf("Out of Boundaries!");
-      	break;
-    }
-  }
-  else
-  {
-    // Chance
-    switch (randNumber)
-    {
-    case 0:
-		movePlayer(p, 0);
-		giveMoney(p, 200);
-      	break;
-    case 1: 
-		int go_to;
-		for(int i=0; i<b.sizeOfBoard; i++){
-			if(b.cells[i].title=="St. Charles Place")
+		case 0:
+			movePlayer(p, 0);	//Advance to 'Go'.
+			giveMoney(p, 200); //Collect $200
+			break;
+		case 1:
+			subtractMoney(p, 50); //Pay $50.
+			break;
+		case 2:
+			giveMoney(p, 50);
+			break;
+		case 3:
+			p.hasJailFreeCard = true;
+			break;
+		case 4:
+			goToJail(b, p);
+			break;
+		case 5:
+			giveMoney(p, 50); // collect from each player
+			break;
+		case 6:
+			giveMoney(p, 100);
+			break;
+		case 7:
+			giveMoney(p, 20);
+			break;
+		case 8:
+			giveMoney(p, 10);
+			break;
+		case 9:
+			giveMoney(p, 100);
+			break;
+		case 10:
+			subtractMoney(p, 50);
+			break;
+		case 11:
+			subtractMoney(p, 50);
+			break;
+		case 12:
+			giveMoney(p, 100);
+			break;
+		case 13:
+			int sum = 0;
+			for (int i = 0; i < b.sizeOfBoard; i++)
 			{
-				go_to = i;  
-				movePlayer(p, i);
-				if(go_to - p.position < 0 || go_to - p.position > 40)
-				giveMoney(p,200);
-				break;
-			}
-		}
-      	break;
-    case 2:
-		int go_to;
-		for(int i=0; i<b.sizeOfBoard; i++){
-			if(b.cells[i].title=="Illinois Avenue")
-			{
-				go_to = i;  
-				movePlayer(p, i);
-				if(go_to - p.position < 0 || go_to - p.position > 40)
-				giveMoney(p,200);
-				break;
-			}
-		}
-		break;
-    case 3: //Bank pays you dividend of $50.
-      	giveMoney(p,50);
-     	break;
-    case 4: //Get out of Jail Free. This card may be kept until needed.
-		
-      	break;
-		  
-    case 5: //Go Back Three {3} Spaces.
-		movePlayer(p, -3);
-		break;
-    case 6: //Go to Jail. Go directly to Jail. Do not pass GO, do not collect $200.
-		movePlayer(p, 11);
-      	break;
-    case 7: //"Make general repairs on all your property: For each house pay $25, For each hotel {pay} $100.
-		int sum = 0;
-		for(int i = 0; i < b.sizeOfBoard; i++){
-			if(b.cells[i].owner.id == p.id){
-				if(b.cells[i].impr.numOfHouses != 0) 
-					sum += ((b.cells[i].impr.numOfHouses) * 25);
-				else if(b.cells[i].impr.hotelExists == true) 
-					sum += 100;
-			}
-		}
-		subtractMoney(p, sum);
-      	break;
-    case 8: //Pay poor tax of $15
-		subtractMoney(p, 15);
-      	break;
-    case 9: //Take a trip to Reading Railroad.If you pass Go, collect $200.
-		bool out_of_bound =true;
-		bool pass_start = false;
-		for(int i = p.position; i < b.sizeOfBoard; i++){
-			if(b.cells[i].title == "Start"){
-				pass_start = true;
-			}
-			if(b.cells[i].title == "Reading Railroads")
-			{
-				movePlayer(p,i);
-				out_of_bound=false;
-				if(pass_start == true)
-					giveMoney(p, 200);
-			}
-		}
-		if(out_of_bound==true){
-			for(int i = 0; i < b.sizeOfBoard; i++){
-				if(b.cells[i].title == "Reading Railroads")
+				if ((b.cells[i].owner.id == p.id) && (b.cells[i].type == 1))
 				{
-					movePlayer(p,i);
-					giveMoney(p, 200);
+					sum += b.cells[i].impr.numOfHouses * 40 + 1 * 115; //Pay $40 per house and $115 per hotel you own
+				}
+			}
+			subtractMoney(p, sum);
+			break;
+		case 14:
+			giveMoney(p, 10);
+			break;
+		case 15:
+			giveMoney(p, 100);
+			break;
+		default:
+			printf("Out of Boundaries!");
+			break;
+		}
+	}
+	else
+	{
+		// Chance
+		switch (randNumber)
+		{
+		case 0:
+			movePlayer(p, 0);
+			giveMoney(p, 200);
+			break;
+		case 1:
+			int go_to;
+			for (int i = 0; i < b.sizeOfBoard; i++)
+			{
+				if (b.cells[i].title == "St. Charles Place")
+				{
+					go_to = i;
+					movePlayer(p, i);
+					if (go_to - p.position < 0 || go_to - p.position > 40)
+						giveMoney(p, 200);
+					break;
+				}
+			}
+			break;
+		case 2:
+			int go_to;
+			for (int i = 0; i < b.sizeOfBoard; i++)
+			{
+				if (b.cells[i].title == "Illinois Avenue")
+				{
+					go_to = i;
+					movePlayer(p, i);
+					if (go_to - p.position < 0 || go_to - p.position > 40)
+						giveMoney(p, 200);
+					break;
+				}
+			}
+			break;
+		case 3: //Bank pays you dividend of $50.
+			giveMoney(p, 50);
+			break;
+		case 4: //Get out of Jail Free. This card may be kept until needed.
+
+			break;
+
+		case 5: //Go Back Three {3} Spaces.
+			movePlayer(p, -3);
+			break;
+		case 6: //Go to Jail. Go directly to Jail. Do not pass GO, do not collect $200.
+			movePlayer(p, 11);
+			break;
+		case 7: //"Make general repairs on all your property: For each house pay $25, For each hotel {pay} $100.
+			int sum = 0;
+			for (int i = 0; i < b.sizeOfBoard; i++)
+			{
+				if (b.cells[i].owner.id == p.id)
+				{
+					if (b.cells[i].impr.numOfHouses != 0)
+						sum += ((b.cells[i].impr.numOfHouses) * 25);
+					else if (b.cells[i].impr.hotelExists == true)
+						sum += 100;
+				}
+			}
+			subtractMoney(p, sum);
+			break;
+		case 8: //Pay poor tax of $15
+			subtractMoney(p, 15);
+			break;
+		case 9: //Take a trip to Reading Railroad.If you pass Go, collect $200.
+			bool out_of_bound = true;
+			bool pass_start = false;
+			for (int i = p.position; i < b.sizeOfBoard; i++)
+			{
+				if (b.cells[i].title == "Start")
+				{
+					pass_start = true;
+				}
+				if (b.cells[i].title == "Reading Railroads")
+				{
+					movePlayer(p, i);
+					out_of_bound = false;
+					if (pass_start == true)
+						giveMoney(p, 200);
+				}
+			}
+			if (out_of_bound == true)
+			{
+				for (int i = 0; i < b.sizeOfBoard; i++)
+				{
+					if (b.cells[i].title == "Reading Railroads")
+					{
+						movePlayer(p, i);
+						giveMoney(p, 200);
+						out_of_bound = false;
+					}
+				}
+			}
+			break;
+		case 10: //Take a walk on the Boardwalk. Advance token to Boardwalk. {Board Walk in both sentences}
+			bool out_of_bound = true;
+			for (int i = p.position; i < b.sizeOfBoard; i++)
+			{
+				if (b.cells[i].title == "Boardwalk")
+				{
+					movePlayer(p, i);
 					out_of_bound = false;
 				}
 			}
-		}
-	  	break;
-    case 10: //Take a walk on the Boardwalk. Advance token to Boardwalk. {Board Walk in both sentences}
-		bool out_of_bound =true;
-		for(int i = p.position; i < b.sizeOfBoard; i++){
-			if(b.cells[i].title == "Boardwalk")
+			if (out_of_bound == true)
 			{
-				movePlayer(p,i);
-				out_of_bound=false;
+				for (int i = 0; i < b.sizeOfBoard; i++)
+				{
+					if (b.cells[i].title == "Boardwalk")
+						movePlayer(p, i);
+				}
 			}
+			break;
+
+		case 11: //Your building {and} loan matures. Receive {Collect} $150.
+			giveMoney(p, 150);
+			break;
+		case 12: //You have won a crossword competition. Collect $100
+			giveMoney(p, 100);
+			break;
+		default:
+			printf("Out of Boundaries!");
+			break;
 		}
-		if(out_of_bound==true){
-			for(int i = 0; i < b.sizeOfBoard; i++){
-				if(b.cells[i].title == "Boardwalk")
-					movePlayer(p,i);
-			}
-		}  
-      	break;
-    
-    case 11: //Your building {and} loan matures. Receive {Collect} $150.
-		giveMoney(p, 150);
-      	break;
-    case 12: //You have won a crossword competition. Collect $100
-		giveMoney(p, 100);
-	  	break;
-    default:
-		printf("Out of Boundaries!");
-		break;
-    }
-  }
+	}
 }
 
 void sendDice(struct Dice d)
@@ -536,39 +548,41 @@ void buttonDisable()
 //Initialize Cards
 void cardsInitialize(struct Card c)
 {
-char *comChest[] = 
-					{ "Advance to 'Go'. Collect $200", 
-                      "Doctor's fees. Pay $50. ", 
-                      "From sale of stock you get $50. ",
-                      "Get Out of Jail Free.", 
-                      "Go to Jail. Go directly to jail. Do not pass Go, Do not collect $200.", 
-                      "Grand Opera Night. Collect $50 from every player for opening night seats. ", 
-                      "Holiday Fund matures. Collect $100.", 
-                      "Income tax refund. Collect $20.",
-                      "It is your birthday. Collect $10 from every player. ", 
-                      "Life insurance matures – Collect $100 ", 
-                      "Hospital Fees. Pay $50.", 
-                      "School fees. Pay $50. ", 
-                      "Receive $25 consultancy fee.",
-                      "You are assessed for street repairs: Pay $40 per house and $115 per hotel you own. ", 
-                      "You have won second prize in a beauty contest. Collect $10. ", 
-                      "You inherit $100.",
-                    };
-  char *chance[] = 
-  					{  	"Advance to 'Go'. Collect $200", 
-						"Advance to St. Charles Place. If you pass Go, collect $200.", 
-						"Advance to Illinois Ave. If you pass Go, collect $200."
-						"Bank pays you dividend of $50.",
-						"Get out of Jail Free. This card may be kept until needed.", 
-						"Go Back Three {3} Spaces.", 
-						"Go to Jail. Go directly to Jail. Do not pass GO, do not collect $200.", 
-						"Make general repairs on all your property: For each house pay $25, For each hotel {pay} $100.", 
-						"Pay poor tax of $15 ", 
-						"Take a trip to Reading Railroad. {Take a ride on the Reading. Advance token and} If you pass Go, collect $200.", 
-						"Take a walk on the Boardwalk. Advance token to Boardwalk. {Board Walk in both sentences} ",
-						"Your building {and} loan matures. Receive {Collect} $150. ", 
-						"You have won a crossword competition. Collect $100.",
-                    }; 
+	char *comChest[] = {
+			"Advance to 'Go'. Collect $200",
+			"Doctor's fees. Pay $50. ",
+			"From sale of stock you get $50. ",
+			"Get Out of Jail Free.",
+			"Go to Jail. Go directly to jail. Do not pass Go, Do not collect $200.",
+			"Grand Opera Night. Collect $50 from every player for opening night seats. ",
+			"Holiday Fund matures. Collect $100.",
+			"Income tax refund. Collect $20.",
+			"It is your birthday. Collect $10 from every player. ",
+			"Life insurance matures – Collect $100 ",
+			"Hospital Fees. Pay $50.",
+			"School fees. Pay $50. ",
+			"Receive $25 consultancy fee.",
+			"You are assessed for street repairs: Pay $40 per house and $115 per hotel you own. ",
+			"You have won second prize in a beauty contest. Collect $10. ",
+			"You inherit $100.",
+	};
+	char *chance[] = {
+			"Advance to 'Go'. Collect $200",
+			"Advance to St. Charles Place. If you pass Go, collect $200.",
+			"Advance to Illinois Ave. If you pass Go, collect $200."
+			"Bank pays you dividend of $50.",
+			"Get out of Jail Free. This card may be kept until needed.",
+			"Go Back Three {3} Spaces.",
+			"Go to Jail. Go directly to Jail. Do not pass GO, do not collect $200.",
+			"Make general repairs on all your property: For each house pay $25, For each hotel {pay} $100.",
+			"Pay poor tax of $15 ",
+			"Take a trip to Reading Railroad. {Take a ride on the Reading. Advance token and} If you pass Go, collect $200.",
+			"Take a walk on the Boardwalk. Advance token to Boardwalk. {Board Walk in both sentences} ",
+			"Your building {and} loan matures. Receive {Collect} $150. ",
+			"You have won a crossword competition. Collect $100.",
+	};
+
+	//needed to be edited
 	for (int i = 0; i < 20; i++)
 	{
 		strcpy(c.comChest[i], comChest[i]);
@@ -582,6 +596,8 @@ void ownersInitialize(struct Board b)
 	b.cells[0].owner.color = 0;
 	b.cells[0].owner.id = 0;
 	b.cells[0].owner.inJail = 0;
+	b.cells[0].owner.jailCounter = 0;
+	b.cells[0].owner.hasJailFreeCard = 0;
 	b.cells[0].owner.money = 0;
 	b.cells[0].owner.name = 0;
 	b.cells[0].owner.needMoney = 0;
@@ -790,7 +806,7 @@ void *write_handler(void *sock_desc)
 void *sequence(void *sock_desc)
 {
 	char *sequence[4];
-	
+
 	char *bye = "Bye";
 	int sock = *(int *)sock_desc;
 	int valread;
@@ -825,7 +841,7 @@ void getSequence(char *buffer, char **sequence)
 	}
 	printf("\n");
 
-	for(int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; i++)
 		printf("Sequence[%d] = %s\n", i, sequence[i]);
 }
 
@@ -960,7 +976,6 @@ char *putBoardCellIntoBuffer(char *buffer, struct BoardCell c)
 	// Maybe just to make changes in owner, we need to pass a string with number of cell
 	//and the changes in struct Player
 	//same with improvements
-	
 	sprintf(buffer, "%s/%d/%d/%d/%d/%s/%d/%d/%d/%d/%d/%d/%d/%d/%d/%d/%d/%d",
 					c.title, c.initialPrice, c.color, c.type, c.owner.id, c.owner.name, c.owner.color,
 					c.owner.money, c.owner.position, c.owner.noMoney, c.owner.needMoney, c.owner.inJail,
