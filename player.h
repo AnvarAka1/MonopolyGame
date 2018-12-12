@@ -2,6 +2,7 @@
 struct Player
 {
   int id;
+  int roomId;
   char *name;
   int color;
   int money;

@@ -58,6 +58,48 @@ void actionToMake(int action)
   }
 }
 
+int Randomize(struct Dice d, struct Board b, struct Player p)
+{
+  int move;
+  buttonDisable();
+  /* Intializes random number generator */
+  d.num1 = 1 + rand() % 6; //5
+  d.num2 = 1 + rand() % 6; //6
+  if (d.num1 == d.num2)
+  {
+    if (p.inJail)
+    {
+      p.inJail = false;
+      p.jailCounter = 0;
+    }
+    d.counter++;
+    if (d.counter == 3)
+    {
+      //go to jail
+      goToJail(b, p);
+      d.counter = 0;
+    }
+  }
+  else
+  {
+    d.counter = 0;
+  }
+
+  // if the player is in jail, then he just skips his turn
+  // and jailCounter++
+  if (p.inJail)
+  {
+    p.jailCounter++;
+  }
+  else
+  {
+    move = p.position + d.num1 + d.num2;
+    movePlayer(p, move);
+  }
+  sendDice(d);
+  return d.counter;
+}
+
 #pragma region STRINGS
 //receives the sequence in which the players must go
 //invoked only once at the beginning
